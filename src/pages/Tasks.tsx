@@ -46,23 +46,28 @@ const NoTasksMessage = styled.div`
   font-size: 14px;
 `;
 
-const Tasks: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+interface TasksProps {
+  initialTasks?: Task[];
+  initialCategories?: Category[];
+}
+
+const Tasks: React.FC<TasksProps> = ({ initialTasks = [], initialCategories = [] }) => {
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState('today');
   const [preferences, setPreferences] = useState<UserPreferences>({
-    useSampleData: true,
+    useSampleData: initialTasks.length === 0,
     showCompletedTasks: false
   });
 
-  // Load initial data
+  // Load initial data only if no initial tasks provided
   useEffect(() => {
-    if (preferences.useSampleData) {
+    if (preferences.useSampleData && tasks.length === 0) {
       const data = loadSampleData();
       setTasks(data.tasks);
       setCategories(data.categories);
     }
-  }, [preferences.useSampleData]);
+  }, [preferences.useSampleData, tasks.length]);
 
   // Create a map of categories for easier lookup
   const categoryMap = categories.reduce((acc, category) => {

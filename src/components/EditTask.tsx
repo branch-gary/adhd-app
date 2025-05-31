@@ -6,41 +6,68 @@ import Modal from './Modal';
 const EditForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: ${props => props.theme.spacing.medium};
+  gap: ${props => props.theme.spacing.large};
 `;
 
 const FormGroup = styled.div`
   margin-bottom: ${props => props.theme.spacing.medium};
+  position: relative;
 `;
 
 const Label = styled.label`
   display: block;
   margin-bottom: ${props => props.theme.spacing.small};
   color: ${props => props.theme.colors.text};
-  font-weight: ${props => props.theme.typography.fontWeight.medium};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
+  font-size: ${props => props.theme.typography.fontSize.medium};
+`;
+
+const HelpText = styled.div`
+  color: ${props => props.theme.colors.secondary};
+  font-size: ${props => props.theme.typography.fontSize.small};
+  margin-top: 4px;
+  line-height: 1.4;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: ${props => props.theme.spacing.small};
-  border: 1px solid #ddd;
-  border-radius: ${props => props.theme.borderRadius.small};
+  padding: ${props => props.theme.spacing.medium};
+  border: 2px solid #e0e0e0;
+  border-radius: ${props => props.theme.borderRadius.medium};
   font-size: ${props => props.theme.typography.fontSize.medium};
+  background-color: white;
+  transition: all 0.2s ease;
+
   &:focus {
     outline: none;
     border-color: ${props => props.theme.colors.primary};
+    box-shadow: 0 0 0 3px ${props => props.theme.colors.primary}20;
+  }
+
+  &::placeholder {
+    color: #aaa;
   }
 `;
 
 const Select = styled.select`
   width: 100%;
-  padding: ${props => props.theme.spacing.small};
-  border: 1px solid #ddd;
-  border-radius: ${props => props.theme.borderRadius.small};
+  padding: ${props => props.theme.spacing.medium};
+  border: 2px solid #e0e0e0;
+  border-radius: ${props => props.theme.borderRadius.medium};
   font-size: ${props => props.theme.typography.fontSize.medium};
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+
   &:focus {
     outline: none;
     border-color: ${props => props.theme.colors.primary};
+    box-shadow: 0 0 0 3px ${props => props.theme.colors.primary}20;
   }
 `;
 
@@ -52,19 +79,35 @@ const ButtonGroup = styled.div`
 `;
 
 const Button = styled.button<{ variant?: 'primary' | 'secondary' }>`
-  padding: ${props => props.theme.spacing.small} ${props => props.theme.spacing.medium};
+  padding: ${props => props.theme.spacing.medium} ${props => props.theme.spacing.large};
   border: none;
-  border-radius: ${props => props.theme.borderRadius.small};
-  font-weight: ${props => props.theme.typography.fontWeight.medium};
+  border-radius: ${props => props.theme.borderRadius.medium};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
+  font-size: ${props => props.theme.typography.fontSize.medium};
   cursor: pointer;
-  transition: ${props => props.theme.transitions.fast};
+  transition: all 0.2s ease;
   
-  background-color: ${props => props.variant === 'primary' ? props.theme.colors.primary : 'transparent'};
+  background: ${props => props.variant === 'primary' 
+    ? `linear-gradient(135deg, ${props.theme.colors.primary}, #7000ff)`
+    : 'white'};
   color: ${props => props.variant === 'primary' ? 'white' : props.theme.colors.text};
-  border: 1px solid ${props => props.variant === 'primary' ? 'transparent' : '#ddd'};
+  border: 2px solid ${props => props.variant === 'primary' ? 'transparent' : '#e0e0e0'};
+  box-shadow: ${props => props.variant === 'primary' 
+    ? '0 4px 12px rgba(0, 0, 0, 0.1)' 
+    : 'none'};
 
   &:hover {
-    background-color: ${props => props.variant === 'primary' ? '#5000d6' : '#f5f5f5'};
+    transform: translateY(-1px);
+    background: ${props => props.variant === 'primary'
+      ? `linear-gradient(135deg, #5000d6, #6000ef)`
+      : '#f5f5f5'};
+    box-shadow: ${props => props.variant === 'primary'
+      ? '0 6px 16px rgba(0, 0, 0, 0.15)'
+      : 'none'};
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -261,8 +304,10 @@ const EditTask: React.FC<EditTaskProps> = ({
             type="text"
             value={editedTask.title}
             onChange={(e) => setEditedTask({ ...editedTask, title: e.target.value })}
+            placeholder="What do you need to do?"
             required
           />
+          <HelpText>Keep it short and clear - this is what you'll see in your task list</HelpText>
         </FormGroup>
 
         <FormGroup>
@@ -272,7 +317,9 @@ const EditTask: React.FC<EditTaskProps> = ({
             type="text"
             value={editedTask.notes || ''}
             onChange={(e) => setEditedTask({ ...editedTask, notes: e.target.value })}
+            placeholder="Add any extra details you want to remember"
           />
+          <HelpText>Include any additional context or steps you might need later</HelpText>
         </FormGroup>
 
         <FormGroup>
@@ -294,12 +341,13 @@ const EditTask: React.FC<EditTaskProps> = ({
                 {category.icon} {category.name}
               </option>
             ))}
-            <option value="new">+ Add New Category</option>
+            <option value="new">+ Create New Category</option>
           </Select>
+          <HelpText>Group similar tasks together to stay organized</HelpText>
         </FormGroup>
 
         <FormGroup>
-          <Label htmlFor="frequency">Recurrence Pattern</Label>
+          <Label htmlFor="frequency">How often does this repeat?</Label>
           <Select
             id="frequency"
             value={`${editedTask.recurrence.frequency}${editedTask.recurrence.interval > 1 ? '-' + editedTask.recurrence.interval : ''}`}
@@ -325,10 +373,11 @@ const EditTask: React.FC<EditTaskProps> = ({
               </option>
             ))}
           </Select>
+          <HelpText>Choose how frequently you need to do this task</HelpText>
 
           {editedTask.recurrence.frequency === 'weekly' && (
             <>
-              <Label>Days of Week</Label>
+              <Label>Which days of the week?</Label>
               <DaySelector>
                 {DAYS_OF_WEEK.map((day, index) => (
                   <DayButton
@@ -341,12 +390,13 @@ const EditTask: React.FC<EditTaskProps> = ({
                   </DayButton>
                 ))}
               </DaySelector>
+              <HelpText>Select one or more days when this task should appear</HelpText>
             </>
           )}
 
           {editedTask.recurrence.frequency === 'monthly' && (
             <>
-              <Label htmlFor="dayOfMonth">Day of Month</Label>
+              <Label htmlFor="dayOfMonth">Which day of the month?</Label>
               <Input
                 id="dayOfMonth"
                 type="number"
@@ -355,12 +405,13 @@ const EditTask: React.FC<EditTaskProps> = ({
                 value={dayOfMonth}
                 onChange={(e) => setDayOfMonth(parseInt(e.target.value) || 1)}
               />
+              <HelpText>Choose a day between 1-31 when this task should appear each month</HelpText>
             </>
           )}
         </FormGroup>
 
         <FormGroup>
-          <Label htmlFor="estimatedMinutes">Time Estimate (minutes)</Label>
+          <Label htmlFor="estimatedMinutes">How long will it take? (minutes)</Label>
           <Input
             id="estimatedMinutes"
             type="number"
@@ -371,12 +422,14 @@ const EditTask: React.FC<EditTaskProps> = ({
               ...editedTask,
               estimatedMinutes: e.target.value ? parseInt(e.target.value) : undefined
             })}
+            placeholder="e.g., 15"
           />
+          <HelpText>Estimate the time needed - this helps with planning your day</HelpText>
         </FormGroup>
 
         <ButtonGroup>
           <Button type="button" onClick={onCancel}>Cancel</Button>
-          <Button type="submit" variant="primary">Save Changes</Button>
+          <Button type="submit" variant="primary">Save Task</Button>
         </ButtonGroup>
       </EditForm>
 

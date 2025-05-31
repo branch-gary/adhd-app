@@ -175,25 +175,58 @@ const AddTaskButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: ${props => props.theme.spacing.small};
-  padding: ${props => props.theme.spacing.medium};
-  background-color: ${props => props.theme.colors.primary};
+  padding: ${props => props.theme.spacing.medium} ${props => props.theme.spacing.large};
+  background: linear-gradient(135deg, ${props => props.theme.colors.primary}, #7000ff);
   color: white;
   border: none;
-  border-radius: ${props => props.theme.borderRadius.medium};
-  font-weight: ${props => props.theme.typography.fontWeight.medium};
+  border-radius: ${props => props.theme.borderRadius.large};
+  font-weight: ${props => props.theme.typography.fontWeight.semibold};
+  font-size: ${props => props.theme.typography.fontSize.large};
   cursor: pointer;
-  transition: ${props => props.theme.transitions.fast};
+  transition: all 0.3s ease;
   width: fit-content;
-  margin: 0 0 ${props => props.theme.spacing.large};
+  margin: ${props => props.theme.spacing.medium} 0 ${props => props.theme.spacing.xlarge};
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
 
   &:hover {
-    background-color: #5000d6;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+
+    &::before {
+      transform: translateX(100%);
+    }
   }
 
   &:active {
     transform: translateY(0);
   }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+const AddTaskIcon = styled.span`
+  font-size: 24px;
+  margin-right: ${props => props.theme.spacing.small};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 interface TaskListProps {
@@ -286,7 +319,8 @@ const TaskList: React.FC<TaskListProps> = ({
       </Modal>
 
       <AddTaskButton onClick={() => setIsAddingTask(true)}>
-        <span>＋</span> Add Recurring Task
+        <AddTaskIcon>✨</AddTaskIcon>
+        Add New Task
       </AddTaskButton>
 
       <TaskListContainer>
