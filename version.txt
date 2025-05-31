@@ -1,0 +1,22 @@
+Version 0.1.0 - Initial Release (2024)
+
+Features:
+- Task management with recurring tasks support
+- Category-based organization with color coding and icons
+- Upcoming view with 7-day calendar
+- Task editing and completion tracking
+- ADHD-friendly interface with clear visual hierarchy
+- Support for daily, weekly, and monthly recurring tasks
+- Estimated duration tracking
+- Task notes and descriptions
+- Category management with custom colors and icons
+- Show/hide completed tasks
+- Responsive and animated UI
+
+Technical Stack:
+- React with TypeScript
+- Styled Components for styling
+- Modern component architecture
+- Strong type safety
+- Custom hooks and utilities
+- Responsive design principles 
